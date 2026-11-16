@@ -1,0 +1,14 @@
+<Project>
+  <!--
+    Everything the build writes goes to work/build (git-ignored, regenerable).
+    A compilation unit other than the main one (-p:Unit=<name>, docs/units.tsv) has its own
+    directories under work/build/units/<name>.
+  -->
+  <PropertyGroup>
+    <UnitDir Condition="'$(Unit)' != ''">units\$(Unit)\</UnitDir>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)..\work\build\$(UnitDir)obj\</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)..\work\build\$(UnitDir)bin\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+</Project>

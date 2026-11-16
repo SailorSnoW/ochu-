@@ -1,0 +1,34 @@
+Scope
+-----
+
+This license covers the project's own work only: the files under app/, scripts/, build/ and
+docs/, and the documents at the root of the repository.
+
+It does NOT cover src/, the folder the tools generate from your copy of the game and which
+is not part of the repository. It holds decompiled code of the osu! client and of the
+third-party libraries merged into it; it belongs to their authors and no license is granted
+on it (see LEGAL.md and THIRD-PARTY-NOTICES.md). Where a file of docs/ quotes a line of that
+code (docs/fixups.tsv), the quoted line is not covered either.
+
+MIT License
+-----------
+
+Copyright (c) 2026 the ochu!! contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

@@ -1,0 +1,17 @@
+# Keys of the encrypted blocks of the virtual code (docs/pipeline.md).
+# Written by scripts/devirt/find-block-keys.ps1: never by hand.
+# method: token of the virtualized method. block: offset of the encrypted bytes in its body.
+# key: the 32-bit value that decrypts the block. string: the text whose hash is the key (FNV-1a,
+# the hash the compiler gives a 'switch' on a string); empty for a key found by search.
+method	block	key	string
+0x060040C4	17EC	0x650D33C0	reset
+0x060040C4	1849	0xE4CE2924	verify
+0x060040C4	18A6	0xFEFFBCFD	nouser
+0x060040C4	1904	0x7B7A7318	pass
+0x060040C4	1965	0x0C5AF72E	bancho
+0x060040C4	19C2	0xEF01AF58	inactive
+0x060040C4	1A1F	0x5AB75106	ban
+0x060040C4	1A7C	0x3407D7B1	beatmap
+0x060040C4	1AD9	0x33F36F05	disabled
+0x060040C4	1B37	0xC675A5D7	oldver
+0x060040C4	1B98	0x62366FFA	no

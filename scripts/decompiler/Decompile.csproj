@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Project decompilation with the same engine and options as 'ilspycmd -p', plus control
+    over the decompiler's transform list (docs/pipeline.md). Built by scripts/pipeline.ps1
+    into work/tools/decompile.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <!-- Like ilspycmd: using directives are sorted with the invariant culture. -->
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <AssemblyName>decompile</AssemblyName>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)..\..\work\tools\decompile\obj\</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)..\..\work\tools\decompile\bin\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- The decompiler engine, pinned: another version writes another src/. -->
+    <PackageReference Include="ICSharpCode.Decompiler" Version="[9.1.0.7988]" />
+  </ItemGroup>
+</Project>

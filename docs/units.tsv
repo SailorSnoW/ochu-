@@ -1,0 +1,23 @@
+# Compilation units other than the main build. Read by scripts/pipeline.ps1 (decompiler),
+# scripts/build.ps1 and scripts/match.ps1. See docs/matching.md.
+# token<TAB>unit<TAB>note
+# A type token (0x02......) gives the whole top-level type, nested types included, to a unit:
+#   debugplus   same compiler and source tree, /debug+ next to /optimize+ (build/osu.csproj)
+#   csc40       the files of the type alone, compiled by the C# compiler of the .NET Framework 4.x
+# A method token (0x06......) is for the unit 'il' only: the method is written in IL.
+0x02000588	debugplus	EmbeddedAssemblyLoader, the obfuscator's resolver of embedded assemblies: locals read once keep their slot ('stloc; ldloc; ret'), the lock is the one of a compiler without Monitor.Enter(object, ref bool), the iterator is Roslyn's
+0x020008B5	debugplus	ResourceAssemblyResolver, the obfuscator's resource resolver, initialized by the same module initializer: smethod_3 keeps three locals read once
+0x02000315	debugplus	MergedAssemblyReferences, list of the assembly references the obfuscator saw: smethod_0 keeps its locals read once
+0x0200088D	debugplus	Obfuscator.StringDecryptor: IsCalledThroughOwnAssembly keeps its locals read once
+0x020002CD	csc40	AssemblyBoundKey, runtime checks of the obfuscator: 'ldc.i4.0; conv.i8; bne.un' for 'x == 0L' and 'ldlen; conv.i4; brtrue' are the compiler from before Roslyn. csc 2.0, 3.5 and 4.x give the same 24 methods
+0x020001EF	csc40	OptimizedEnumerable, the obfuscator's own Any / FirstOrDefault: 'ldlen; conv.i4; brtrue' and 'ceq; ldc.i4.0; ceq', the same compiler
+0x06000001	il	<Module>::.cctor, the obfuscator's module initializer (it starts the two resolvers): C# 7.3 has no module initializer
+0x060001A2	il	VirtualMachine.RunInstructionLoop: catches System.Object in a local of that type. C# only names what it catches as an Exception
+0x060002D1	il	VirtualMachine.ThrowObject: throws a System.Object. C# only throws an Exception ('castclass' otherwise)
+0x06000EF6	il	OptimizedEnumerable.HasItems: 'get_Count; conv.i4; ldc.i4.0; ceq; ldc.i4.0; ceq', the body of smethod_3 with 'ldlen' turned into a call of List.Count. No compiler converts an int to int: six casts tried with csc 4.x
+0x06003373	il	KeySequences/MixedSequenceIterator MoveNext: an iterator of the compiler over the obfuscator's own copies of IEnumerator (IEnumeratorClone) and IDisposable, with the 'fault' handler of an iterator. C# writes neither
+0x06003379	il	KeySequences/MixedSequenceIterator IEnumerable.GetEnumerator: 'call' of the explicit implementation of the generic GetEnumerator, as the compiler writes in an iterator class
+0x0600337C	il	KeySequences/KeySequenceIterator MoveNext, as 0x06003373
+0x06003382	il	KeySequences/KeySequenceIterator IEnumerable.GetEnumerator, as 0x06003379
+0x0600338A	il	KeySequences/DoublingSequenceIterator IEnumerable.GetEnumerator, as 0x06003379
+0x06003EA1	il	StringDecryptor.DecryptCore: 'call' of StringBuilder.Append on a local, methods pasted with their arguments in locals, loops over the copied interfaces: assembled by the obfuscator for this binary, not the output of a compiler

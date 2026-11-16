@@ -1,0 +1,56 @@
+# --- Never commit ---------------------------------------------------------
+# Pristine game copy: copyrighted binaries + personal config (osu!.<user>.cfg)
+/game/
+# Downloaded third-party tools (reinstall with scripts/setup-tools.ps1)
+/tools/
+# Scratch outputs: raw decompiler dumps, deobfuscated binaries, IL, logs
+/work/
+# The decompiled source: the game's code, generated from your own copy (src.sha256 is its fingerprint)
+/src/
+
+# Safety net: no game binaries or account data anywhere in the tree
+*.exe
+*.dll
+*.pdb
+osu!*.cfg
+*.db
+*.osr
+*.osz
+*.osk
+
+# --- Rust build (scripts/build-app.ps1 builds into work/app) ---
+/app/target/
+
+# --- .NET build -----------------------------------------------------------
+bin/
+obj/
+# Not a build output: the two entry points of app/ (cargo's layout)
+!/app/src/bin/
+*.user
+*.suo
+.vs/
+.idea/
+*.DotSettings.user
+TestResults/
+
+# --- Native RE projects ---------------------------------------------------
+*.gpr.lock
+*.rep/
+*.i64
+*.idb
+*.id0
+*.id1
+*.id2
+*.nam
+*.til
+
+# --- Claude Code ----------------------------------------------------------
+# Project skills (.claude/skills) are versioned; per-machine settings are not.
+.claude/settings.local.json
+
+# --- OS / editor ----------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~

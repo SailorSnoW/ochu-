@@ -1,0 +1,75 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <!--
+    Recompiles src/ so that scripts/match.ps1 can compare it with the reference.
+    Run through scripts/build.ps1. The output is a comparison candidate only: it is not
+    meant to be launched.
+
+    Compiler: Roslyn 3.11.0, pinned by the Microsoft.Net.Compilers.Toolset reference below.
+    Every release from 3.7.0 to 4.2.0 gives the same IL on this source; older and newer
+    ones match less (docs/matching.md). src/ is decompiled as C# 7.3.
+  -->
+  <PropertyGroup>
+    <AssemblyName>osu!</AssemblyName>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net40</TargetFramework>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RootNamespace />
+    <LangVersion>7.3</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <WarningLevel>0</WarningLevel>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
+    <ApplicationManifest>..\src\app.manifest</ApplicationManifest>
+    <!-- Declaring type of the entry point 0x0600378B. Update when names.tsv renames it. -->
+    <StartupObject>osu.Program</StartupObject>
+  </PropertyGroup>
+  <!--
+    Unit 'debugplus' (docs/units.tsv): the same compiler with /debug+ next to /optimize+.
+    Every local declared in the source then keeps its slot (docs/matching.md).
+  -->
+  <PropertyGroup Condition="'$(Unit)' == 'debugplus'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="[3.11.0]" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\src\**\*.cs" />
+  </ItemGroup>
+  <!--
+    The managed resources of the reference, embedded as they are (scripts/export-resources.ps1).
+    Game data: under work/, never versioned.
+  -->
+  <Import Project="..\work\resources\build\resources.props" Condition="Exists('..\work\resources\build\resources.props')" />
+  <!-- The Win32 resources of the reference (icons, version, manifest) as they are: no manifest or version of the compiler's own. -->
+  <PropertyGroup Condition="Exists('..\work\resources\build\win32.res')">
+    <Win32Resource>..\work\resources\build\win32.res</Win32Resource>
+    <ApplicationManifest />
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Ink"><HintPath>..\work\triage\in\Microsoft.Ink.dll</HintPath></Reference>
+    <Reference Include="OpenTK"><HintPath>..\work\triage\in\OpenTK.dll</HintPath></Reference>
+    <Reference Include="osu!gameplay"><HintPath>..\work\triage\in\osu!gameplay.dll</HintPath></Reference>
+    <Reference Include="osu!seasonal"><HintPath>..\work\triage\in\osu!seasonal.dll</HintPath></Reference>
+    <Reference Include="osu!ui"><HintPath>..\work\triage\in\osu!ui.dll</HintPath></Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+</Project>

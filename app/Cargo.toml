@@ -1,0 +1,38 @@
+[package]
+name = "ochu"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Generates the decompiled source of the legacy osu! client from your own copy of the game"
+publish = false
+
+[lib]
+name = "ochu"
+path = "src/lib.rs"
+
+[[bin]]
+name = "ochu"
+path = "src/bin/ochu.rs"
+
+[[bin]]
+name = "ochu-cli"
+path = "src/bin/ochu_cli.rs"
+
+[dependencies]
+anyhow = "1"
+sha2 = "0.10"
+regex = "1"
+fancy-regex = "0.14"
+include_dir = "0.7"
+ureq = "2"
+winreg = "0.55"
+eframe = { version = "0.31", default-features = false, features = ["glow", "default_fonts"] }
+rfd = "0.15"
+
+[profile.release]
+opt-level = 2
+lto = "thin"
+strip = true
+
+[build-dependencies]
+winresource = "0.1"
