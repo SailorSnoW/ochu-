@@ -1,5 +1,11 @@
-blank_issues_enabled: true
+blank_issues_enabled: false
 contact_links:
+  - name: Question, or help with a run
+    url: https://github.com/SailorSnoW/ochu-/discussions
+    about: How to use the tool, how something works. Issues are for defects, names and proposals.
+  - name: Security report
+    url: https://github.com/SailorSnoW/ochu-/security/advisories/new
+    about: A defect of the tool that puts its users at risk is reported privately (SECURITY.md).
   - name: Removal request (rights holders)
     url: https://github.com/SailorSnoW/ochu-/blob/main/LEGAL.md
     about: How to ask for material to be removed.

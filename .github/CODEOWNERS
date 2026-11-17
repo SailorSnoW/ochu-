@@ -1,0 +1,32 @@
+# Files where a change moves what the tool downloads, what it publishes or what the
+# project states: a review by the maintainer is asked for on every pull request that
+# touches them. The last matching line wins.
+
+# Workflows, templates, release notes
+/.github/                             @SailorSnoW
+
+# Pins: tools, compilers, decompiler engine, toolchain
+/app/src/tools.rs                     @SailorSnoW
+/app/Cargo.lock                       @SailorSnoW
+/app/rust-toolchain.toml              @SailorSnoW
+/scripts/setup-tools.ps1              @SailorSnoW
+/scripts/decompiler/Decompile.csproj  @SailorSnoW
+/build/                               @SailorSnoW
+/global.json                          @SailorSnoW
+
+# Fingerprints of the game copy and of the generated source
+/*.sha256                             @SailorSnoW
+/docs/vm-block-keys.tsv               @SailorSnoW
+
+# What the repository checks about itself
+/scripts/dev/check-repo.ps1           @SailorSnoW
+/scripts/dev/check-commits.ps1        @SailorSnoW
+
+# Legal notices and rules
+/LEGAL.md                             @SailorSnoW
+/LICENSE                              @SailorSnoW
+/THIRD-PARTY-NOTICES.md               @SailorSnoW
+/SECURITY.md                          @SailorSnoW
+/CODE_OF_CONDUCT.md                   @SailorSnoW
+/CONTRIBUTING.md                      @SailorSnoW
+/CLAUDE.md                            @SailorSnoW

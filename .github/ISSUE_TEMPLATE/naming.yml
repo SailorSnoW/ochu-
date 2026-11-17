@@ -24,3 +24,10 @@ body:
       description: What shows that this is the right name (a string, a serialized field, a public API, the behaviour). Say when it is an inference.
     validations:
       required: true
+  - type: checkboxes
+    id: public
+    attributes:
+      label: Public repository
+      options:
+        - label: This quotes no more of `src/` than identifiers, and no name here comes from leaked source code.
+          required: true

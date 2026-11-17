@@ -9,6 +9,12 @@ is not accepted.
 Setup is in the README ("Work on the project"). What each part does is in
 [`docs/pipeline.md`](docs/pipeline.md) and [`docs/matching.md`](docs/matching.md).
 
+How people are expected to behave is in [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md). A defect
+of the tool that puts its users at risk is reported privately: [`SECURITY.md`](SECURITY.md).
+Questions go to the discussions; issues are for defects, names and proposals. A pull request
+that touches a file of [`.github/CODEOWNERS`](.github/CODEOWNERS) (the pins, the
+fingerprints, the workflows, the legal notices) waits for the maintainer's review.
+
 ## What the CI checks, and what it cannot
 
 Every pull request runs `.github/workflows/ci.yml`:

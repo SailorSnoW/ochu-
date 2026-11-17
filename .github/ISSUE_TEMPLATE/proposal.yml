@@ -1,0 +1,48 @@
+name: Improvement proposal
+description: Something the tool, the decompiler or the documents should do, or do better.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For a question about using the tool, open a discussion instead. The project does not
+        take tooling that gets around the game's anti-cheat or that takes a rebuilt client
+        online (`LEGAL.md`).
+  - type: dropdown
+    id: area
+    attributes:
+      label: Part
+      options:
+        - The program (ochu.exe / ochu-cli.exe)
+        - The pipeline (deobfuscation, devirtualization, naming)
+        - The decompiler (how the generated source reads)
+        - Build and checks (build, link, the five checks)
+        - Documentation
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What, and why
+      description: What it would change for someone who uses the tool or reads the source it generates.
+    validations:
+      required: true
+  - type: dropdown
+    id: src
+    attributes:
+      label: Would it change the generated src/?
+      description: A change of `src/` must keep every method matching and comes with a new `src.sha256` (CONTRIBUTING.md).
+      options:
+        - "No"
+        - "Yes"
+        - I do not know
+    validations:
+      required: true
+  - type: checkboxes
+    id: public
+    attributes:
+      label: Public repository
+      options:
+        - label: This holds no code from `src/` beyond identifiers, no game file, nothing from leaked source code, and nothing that names my account or my user folder.
+          required: true

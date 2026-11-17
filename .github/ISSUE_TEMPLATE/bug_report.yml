@@ -44,3 +44,10 @@ body:
       render: text
     validations:
       required: true
+  - type: checkboxes
+    id: public
+    attributes:
+      label: Public repository
+      options:
+        - label: This holds no code from `src/`, no game file, and nothing that names my account or my user folder.
+          required: true
