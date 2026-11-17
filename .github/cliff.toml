@@ -1,0 +1,38 @@
+# Release notes, written by git-cliff from the commit subjects (.github/workflows/release.yml).
+# A subject of the form "type(scope): text" goes to the section of its type; any other
+# subject goes to "Other changes". See "Commits" in CONTRIBUTING.md.
+
+[changelog]
+header = ""
+body = """
+{% if version %}## {{ version | trim_start_matches(pat="v") }} - {{ timestamp | date(format="%Y-%m-%d") }}{% else %}## Unreleased{% endif %}
+{% for group, commits in commits | group_by(attribute="group") %}
+### {{ group | striptags | trim }}
+{% for commit in commits %}
+- {% if commit.breaking %}**Breaking:** {% endif %}{% if commit.scope %}**{{ commit.scope }}:** {% endif %}\
+{{ commit.message | split(pat="\n") | first | trim | upper_first }} ({{ commit.id | truncate(length=7, end="") }})
+{%- endfor %}
+{% endfor %}
+"""
+trim = true
+
+[git]
+conventional_commits = true
+filter_unconventional = false
+split_commits = false
+protect_breaking_commits = true
+filter_commits = false
+tag_pattern = "v[0-9]*"
+sort_commits = "oldest"
+# The comment in front of a name only orders the sections.
+commit_parsers = [
+  { message = "^chore\\(release\\)", skip = true },
+  { message = "^Merge (branch|pull request|remote-tracking)", skip = true },
+  { message = "^feat", group = "<!-- 0 -->Added" },
+  { message = "^fix", group = "<!-- 1 -->Fixed" },
+  { message = "^names", group = "<!-- 2 -->Naming" },
+  { message = "^(perf|refactor|style)", group = "<!-- 3 -->Changed" },
+  { message = "^docs", group = "<!-- 4 -->Documentation" },
+  { message = "^(ci|build|chore|test|deps)", group = "<!-- 5 -->Maintenance" },
+  { message = ".*", group = "<!-- 6 -->Other changes" },
+]

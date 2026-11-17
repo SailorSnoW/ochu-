@@ -1,0 +1,103 @@
+name: CI
+
+# What can be checked without a copy of the game. The matching rate cannot: it needs the
+# reference build, which no runner may hold (CONTRIBUTING.md).
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: powershell # Windows PowerShell 5.1, the one the scripts are written for
+
+jobs:
+  repo:
+    name: Repository checks
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: dnlib (pinned in scripts/setup-tools.ps1)
+        run: .\scripts\setup-tools.ps1 -Only de4dot-cex
+      - name: Tracked files, scripts, tables, fingerprints, scripts/lib
+        run: .\scripts\dev\check-repo.ps1 -RequireLib
+
+  app:
+    name: app (Rust)
+    runs-on: windows-latest
+    timeout-minutes: 30
+    env:
+      CARGO_TARGET_DIR: ${{ github.workspace }}\work\app
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Rust toolchain (app/rust-toolchain.toml)
+        working-directory: app
+        run: |
+          rustup toolchain install
+          cargo --version
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        with:
+          workspaces: app -> ../work/app
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - name: rustfmt
+        working-directory: app
+        run: cargo fmt --check
+      - name: clippy
+        working-directory: app
+        run: cargo clippy --locked --all-targets -- -D warnings
+      - name: Tests
+        working-directory: app
+        run: cargo test --locked
+      - name: Release build (scripts/build-app.ps1)
+        run: .\scripts\build-app.ps1
+      - name: The console starts
+        run: |
+          & .\work\app\release\ochu-cli.exe help
+          if ($LASTEXITCODE -ne 0) { throw 'ochu-cli.exe help failed' }
+      # For the reviewer who wants to try the change. Built from the pull request's code:
+      # read the diff before running it.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ochu-${{ github.sha }}
+          path: |
+            work/app/release/ochu.exe
+            work/app/release/ochu-cli.exe
+          if-no-files-found: error
+          retention-days: 7
+
+  decompiler:
+    name: scripts/decompiler (.NET)
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          global-json-file: global.json
+      # The command of the pipeline (app/src/pipeline.rs).
+      - name: Build
+        run: |
+          dotnet build scripts\decompiler\Decompile.csproj -c Release -nologo -v q
+          if ($LASTEXITCODE -ne 0) { throw 'building scripts/decompiler failed' }
+
+  # The one check to require in the branch protection of main.
+  ok:
+    name: CI
+    if: always()
+    needs: [repo, app, decompiler]
+    runs-on: ubuntu-latest
+    steps:
+      - shell: bash
+        run: |
+          echo '${{ toJSON(needs) }}'
+          [ "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped') }}" = "false" ]

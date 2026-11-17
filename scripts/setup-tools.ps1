@@ -6,13 +6,15 @@
     Idempotent. Downloads are cached in tools/_cache and verified against the
     SHA-256 pinned below before extraction. A tool whose folder already exists
     is skipped unless -Force is given.
+    -Only installs the named tools alone (the CI needs de4dot-cex only).
 
 .EXAMPLE
     .\scripts\setup-tools.ps1
 #>
 [CmdletBinding()]
 param(
-    [switch]$Force
+    [switch]$Force,
+    [string[]]$Only
 )
 
 $ErrorActionPreference = 'Stop'
@@ -147,6 +149,11 @@ function Install-Tool($t) {
     Write-Host ("[ ok ] {0} {1}" -f $t.Name, $t.Version)
 }
 
+if ($Only) {
+    $unknown = @($Only | Where-Object { $name = $_; -not ($Manifest | Where-Object { $_.Name -eq $name }) })
+    if ($unknown) { throw ("-Only: no tool named {0}" -f ($unknown -join ', ')) }
+    $Manifest = @($Manifest | Where-Object { $Only -contains $_.Name })
+}
 foreach ($t in $Manifest) { Install-Tool $t }
 
 Write-Host 'Done.'

@@ -106,6 +106,10 @@ On a working machine `src-manifest --verify` reports no difference and `match.ps
 the rate given above. If PowerShell refuses to run the scripts:
 `powershell -ExecutionPolicy Bypass -File <script>`.
 
+Pull requests are welcome: [`CONTRIBUTING.md`](CONTRIBUTING.md) says what the CI checks
+(`scripts\dev\check-repo.ps1`, the build of `app/` and of the decompiler), what it cannot (the
+matching rate: no runner holds the game) and how a release is made.
+
 The scripts do not run on macOS or Linux: decrypting the strings executes the game's own
 decryptor in a 32-bit .NET Framework. Use a Windows virtual machine.
 

@@ -20,3 +20,6 @@
 *.ttf  binary
 *.snk  binary
 *.resources binary
+
+*.yml     text eol=lf
+*.yaml    text eol=lf

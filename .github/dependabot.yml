@@ -1,0 +1,14 @@
+version: 2
+updates:
+  # The actions of the workflows are pinned by commit: this proposes the new ones.
+  # The crates, the decompiler engine and the compilers are pinned on purpose (another version
+  # can write another src/): they are updated by hand, with the five checks.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: ci
+    groups:
+      actions:
+        patterns: ['*']

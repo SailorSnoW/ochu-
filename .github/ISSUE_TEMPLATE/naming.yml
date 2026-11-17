@@ -1,0 +1,26 @@
+name: Name proposal
+description: A better name for a symbol, or a name for one that is still generic (Class123).
+labels: [naming]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Names live in `docs/names.tsv`, one row per metadata token, each with its evidence
+        ("Naming" in `docs/pipeline.md`). A pull request that edits the table is welcome too.
+        Quote no more of `src/` than the identifier itself, and never a name taken from leaked
+        source code.
+  - type: textarea
+    id: names
+    attributes:
+      label: Token, current name, proposed name
+      placeholder: "0x02000123  Class123  ->  BeatmapTimingCache"
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: What shows that this is the right name (a string, a serialized field, a public API, the behaviour). Say when it is an inference.
+    validations:
+      required: true

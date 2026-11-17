@@ -1,0 +1,46 @@
+name: Problem report
+description: The program fails, or the source it generates is not the one of src.sha256.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste code from `src/`, game files or anything that names your account: the
+        repository is public. Paths under your user folder can be shortened.
+  - type: dropdown
+    id: what
+    attributes:
+      label: What fails
+      options:
+        - ochu.exe / ochu-cli.exe generate
+        - The scripts (pipeline, build, match)
+        - src-manifest --verify reports a difference
+        - Something else
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The release you downloaded, or the commit you built.
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      placeholder: Windows 11 24H2
+  - type: checkboxes
+    id: game
+    attributes:
+      label: Game copy
+      options:
+        - label: The game folder is the reference build (`ochu-cli.exe verify-game <folder>`, or `scripts\game-manifest.ps1 -Verify -Core`).
+  - type: textarea
+    id: steps
+    attributes:
+      label: What you did, what happened
+      description: The command, and the end of its output or of the log.
+      render: text
+    validations:
+      required: true
