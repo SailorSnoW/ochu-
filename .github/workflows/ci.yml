@@ -5,6 +5,8 @@ name: CI
 
 on:
   pull_request:
+    # edited: the title is checked too
+    types: [opened, synchronize, reopened, edited]
   push:
     branches: [main]
   workflow_dispatch:
@@ -31,6 +33,31 @@ jobs:
         run: .\scripts\setup-tools.ps1 -Only de4dot-cex
       - name: Tracked files, scripts, tables, fingerprints, scripts/lib
         run: .\scripts\dev\check-repo.ps1 -RequireLib
+
+  commits:
+    name: Commit messages
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      # Conventional subject, 72 characters at most, no credit to a language model
+      # (CONTRIBUTING.md, "Commits"). The values come through the environment, never
+      # through the text of the script.
+      - name: Commits of the pull request, and its title
+        if: github.event_name == 'pull_request'
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+          TITLE: ${{ github.event.pull_request.title }}
+        run: .\scripts\dev\check-commits.ps1 -Range "$env:BASE..$env:HEAD" -Title $env:TITLE
+      - name: Commits of the push
+        if: github.event_name == 'push' && !github.event.forced && github.event.before != '0000000000000000000000000000000000000000'
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: .\scripts\dev\check-commits.ps1 -Range "$env:BEFORE..$env:AFTER"
 
   app:
     name: app (Rust)
@@ -94,7 +121,7 @@ jobs:
   ok:
     name: CI
     if: always()
-    needs: [repo, app, decompiler]
+    needs: [repo, commits, app, decompiler]
     runs-on: ubuntu-latest
     steps:
       - shell: bash

@@ -1,6 +1,7 @@
 # Release notes, written by git-cliff from the commit subjects (.github/workflows/release.yml).
 # A subject of the form "type(scope): text" goes to the section of its type; any other
-# subject goes to "Other changes". See "Commits" in CONTRIBUTING.md.
+# subject (the CI refuses them, scripts/dev/check-commits.ps1) goes to "Other changes".
+# See "Commits" in CONTRIBUTING.md.
 
 [changelog]
 header = ""

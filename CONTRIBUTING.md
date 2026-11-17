@@ -17,6 +17,7 @@ Every pull request runs `.github/workflows/ci.yml`:
 |---|---|
 | Repository checks | `scripts\dev\check-repo.ps1 -RequireLib`: no tracked file of the game, the tools or a build; no user folder in a text; every `.ps1` ASCII-only and parsing in Windows PowerShell 5.1; the tables of `docs/` well-formed (columns, unique tokens); `game.sha256` and `src.sha256` well-formed; `scripts/lib/*.cs` compiling against dnlib. |
 | app (Rust) | `cargo fmt --check`, `cargo clippy -D warnings`, `cargo test`, then `scripts\build-app.ps1` and `ochu-cli.exe help`. The two programs are attached to the run for seven days. |
+| Commit messages | `scripts\dev\check-commits.ps1` on the commits of the pull request and on its title: see "Commits" below. |
 | scripts/decompiler (.NET) | `dotnet build` of the decompiler, with the command of the pipeline. |
 
 Run the first one before you push: `.\scripts\dev\check-repo.ps1`.
@@ -39,11 +40,21 @@ cannot be reproduced is not merged.
 
 ## Commits
 
-The release notes are written from the commit subjects, so a subject says what changed for
-someone who uses the tool. The form `type(scope): text` sorts it into a section; the scope is
-optional, and a subject in any other form still appears, under "Other changes".
+These rules hold for everyone who commits, people and coding agents alike, and the CI
+enforces the first three on every pull request (`scripts\dev\check-commits.ps1`, which you
+can run before you push).
 
-| Type | Section | For |
+1. **Conventional subject**: `type(scope): text`, with a type of the table below. The scope
+   is optional. `!` after the type (`fix(decompiler)!: ...`) marks a change that breaks a use.
+2. **Short**: the subject is 72 characters at most and says what changed for someone who
+   uses the tool; the release notes are written from it.
+3. **No credit to a language model or an assistant**: no `Co-Authored-By` trailer and no
+   "Generated with" line that names one. The author of a commit is the person who answers
+   for it, whatever was used to write it.
+4. **A body only when the subject cannot carry the reason**, and then a few lines. No list
+   of the files touched, no account of the work: the diff and the pull request hold those.
+
+| Type | Section of the notes | For |
 |---|---|---|
 | `feat` | Added | something the tool could not do |
 | `fix` | Fixed | a defect of the tool, or a method that did not match |
@@ -52,9 +63,8 @@ optional, and a subject in any other form still appears, under "Other changes".
 | `docs` | Documentation | |
 | `ci`, `build`, `chore`, `test`, `deps` | Maintenance | |
 
-`!` after the type (`fix(decompiler)!: ...`) marks a change that breaks a use. Usual scopes:
-`app`, `pipeline`, `decompiler`, `devirt`, `match`, `build`. Pull requests are merged squashed:
-their title is the subject.
+Usual scopes: `app`, `pipeline`, `decompiler`, `devirt`, `match`, `build`. Pull requests are
+merged squashed: their title is the subject, and it is checked the same way.
 
 ## Releases
 

@@ -1,4 +1,5 @@
-<!-- The title becomes the line of the release notes: "type(scope): what changed" (CONTRIBUTING.md). -->
+<!-- The title becomes the commit subject and the line of the release notes: "type(scope): what changed",
+     72 characters at most. No "Generated with" line or co-author credit for a language model (CONTRIBUTING.md). -->
 
 ## What and why
 
@@ -23,6 +24,7 @@ dev\verify-check.ps1:
 
 ## Checklist
 
+- [ ] `scripts\dev\check-commits.ps1` passes: conventional subjects, no credit to a language model.
 - [ ] `scripts\dev\check-repo.ps1` passes.
 - [ ] No file of `src/`, no game binary or asset, no account data, no path of my machine.
 - [ ] New names in `docs/names.tsv` carry their evidence, and none comes from leaked source code.
