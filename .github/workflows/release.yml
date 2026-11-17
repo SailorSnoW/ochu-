@@ -157,6 +157,9 @@ jobs:
     needs: [build, notes]
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # The environment only takes tags v*, and waits for the maintainer when it has a
+    # required reviewer: a tag pushed by mistake publishes nothing by itself.
+    environment: Release
     permissions:
       contents: write # the release
       id-token: write # the attestation
