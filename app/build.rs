@@ -17,7 +17,9 @@ fn copy_tree(from: &Path, to: &Path) -> io::Result<()> {
 }
 
 fn main() {
-    for path in ["../scripts", "../build", "../docs", "../global.json", "../game.sha256", "../src.sha256", "assets/icon.ico"] {
+    for path in
+        ["../scripts", "../build", "../docs", "../global.json", "../game.sha256", "../src.sha256", "assets/icon.ico"]
+    {
         println!("cargo:rerun-if-changed={}", path);
     }
     let out = env::var("OUT_DIR").unwrap();

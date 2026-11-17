@@ -13,14 +13,8 @@ use std::sync::Mutex;
 
 pub const REFERENCE_BUILD: &str = "1.3.3.8";
 
-pub const CORE_FILES: [&str; 6] = [
-    "osu!.exe",
-    "osu!gameplay.dll",
-    "osu!ui.dll",
-    "osu!seasonal.dll",
-    "OpenTK.dll",
-    "Microsoft.Ink.dll",
-];
+pub const CORE_FILES: [&str; 6] =
+    ["osu!.exe", "osu!gameplay.dll", "osu!ui.dll", "osu!seasonal.dll", "OpenTK.dll", "Microsoft.Ink.dll"];
 
 pub enum Event {
     Line(String),

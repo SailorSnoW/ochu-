@@ -105,7 +105,8 @@ fn cmd_locate(args: Args) -> Result<ExitCode> {
     }
     for dir in found {
         let reference = manifest::verify_game(&dir, payload::GAME_SHA256).is_empty();
-        let verdict = if reference { format!("reference build {}", REFERENCE_BUILD) } else { "another build".to_string() };
+        let verdict =
+            if reference { format!("reference build {}", REFERENCE_BUILD) } else { "another build".to_string() };
         println!("{}\t{}", dir.display(), verdict);
     }
     Ok(ExitCode::SUCCESS)
@@ -125,7 +126,8 @@ fn cmd_generate(mut args: Args) -> Result<ExitCode> {
     let out = args.path("--out")?.ok_or_else(|| anyhow!("generate needs --out <folder>"))?;
     let game = match args.path("--game")? {
         Some(game) => game,
-        None => locate::best(payload::GAME_SHA256).ok_or_else(|| anyhow!("no osu! installation found: give --game <folder>"))?,
+        None => locate::best(payload::GAME_SHA256)
+            .ok_or_else(|| anyhow!("no osu! installation found: give --game <folder>"))?,
     };
     let check = args.flag("--check");
     args.done()?;
@@ -142,7 +144,9 @@ fn cmd_generate(mut args: Args) -> Result<ExitCode> {
 fn cmd_pipeline(mut args: Args) -> Result<ExitCode> {
     let root = checkout(&mut args)?;
     let from = match args.value("--from")? {
-        Some(name) => pipeline::stage_index(&name).ok_or_else(|| anyhow!("--from: one of {}", pipeline::stage_names()))?,
+        Some(name) => {
+            pipeline::stage_index(&name).ok_or_else(|| anyhow!("--from: one of {}", pipeline::stage_names()))?
+        }
         None => 0,
     };
     let options = pipeline::Options {

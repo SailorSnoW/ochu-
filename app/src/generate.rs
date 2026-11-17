@@ -97,7 +97,10 @@ pub fn generate(ctx: &Ctx, game: &Path, check: bool) -> Result<Outcome> {
     check_game(ctx, game)?;
 
     ctx.step(2, total, "Preparing the workspace");
-    files::write(&root.join(MARKER), "Workspace of ochu!!. Everything here is regenerated: do not keep your own files in it.\n")?;
+    files::write(
+        &root.join(MARKER),
+        "Workspace of ochu!!. Everything here is regenerated: do not keep your own files in it.\n",
+    )?;
     payload::extract(root)?;
     ctx.log(format!("workspace: {}", root.display()));
 
@@ -107,7 +110,8 @@ pub fn generate(ctx: &Ctx, game: &Path, check: bool) -> Result<Outcome> {
         ctx.set_env(key, value);
     }
 
-    let options = pipeline::Options { game: Some(game.to_path_buf()), steps: Some((STEPS_BEFORE, total)), ..Default::default() };
+    let options =
+        pipeline::Options { game: Some(game.to_path_buf()), steps: Some((STEPS_BEFORE, total)), ..Default::default() };
     pipeline::run(ctx, &options)?;
 
     let after = STEPS_BEFORE + pipeline::STAGES.len();

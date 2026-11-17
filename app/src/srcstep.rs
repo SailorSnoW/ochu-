@@ -25,7 +25,9 @@ fn has_extension(path: &Path, extension: &str) -> bool {
 }
 
 fn is_source(path: &Path) -> bool {
-    has_extension(path, "cs") || has_extension(path, "il") || path.file_name().is_some_and(|n| n.eq_ignore_ascii_case("app.manifest"))
+    has_extension(path, "cs")
+        || has_extension(path, "il")
+        || path.file_name().is_some_and(|n| n.eq_ignore_ascii_case("app.manifest"))
 }
 
 fn copy_sources(from: &Path, to: &Path) -> Result<()> {
@@ -165,7 +167,11 @@ impl Fixup<'_> {
         let rx = NetRegex::new(pattern).context("bad pattern")?;
         let replacement = self.new.replace("\\n", "\r\n").replace("\\t", "\t");
         let (new, count) = replace_all(&rx, text, &replacement)?;
-        Ok(if count == 1 || (every && count > 1) { Ok(new) } else { Err(format!("pattern found {} times in {}", count, self.file)) })
+        Ok(if count == 1 || (every && count > 1) {
+            Ok(new)
+        } else {
+            Err(format!("pattern found {} times in {}", count, self.file))
+        })
     }
 }
 

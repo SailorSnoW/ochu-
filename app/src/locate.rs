@@ -3,7 +3,8 @@ use std::path::{Path, PathBuf};
 use winreg::enums::{HKEY_CLASSES_ROOT, HKEY_CURRENT_USER};
 use winreg::RegKey;
 
-const HANDLERS: [&str; 6] = ["osu", "osu!", "osustable.Uri.osu", "osustable.File.osz", "osustable.File.osu", "osustable.File.osk"];
+const HANDLERS: [&str; 6] =
+    ["osu", "osu!", "osustable.Uri.osu", "osustable.File.osz", "osustable.File.osu", "osustable.File.osk"];
 
 pub fn has_game(dir: &Path) -> bool {
     dir.join("osu!.exe").is_file()

@@ -41,7 +41,10 @@ impl GameState {
             GameState::Empty => ("No installation found: choose the folder that holds osu!.exe.".into(), MUTED),
             GameState::NoGame => ("There is no osu!.exe in this folder.".into(), BAD),
             GameState::Checking => ("Checking the build...".into(), MUTED),
-            GameState::Reference => (format!("Reference build {}: every file the pipeline reads is the expected one.", REFERENCE_BUILD), GOOD),
+            GameState::Reference => (
+                format!("Reference build {}: every file the pipeline reads is the expected one.", REFERENCE_BUILD),
+                GOOD,
+            ),
             GameState::Other(bad) => {
                 let files: Vec<&str> = bad.iter().filter_map(|l| l.split_whitespace().last()).collect();
                 let text = format!(
@@ -143,7 +146,8 @@ impl App {
         let ctx = &cc.egui_ctx;
         style(ctx);
         let logo = eframe::icon_data::from_png_bytes(ICON).ok().map(|icon| {
-            let image = egui::ColorImage::from_rgba_unmultiplied([icon.width as usize, icon.height as usize], &icon.rgba);
+            let image =
+                egui::ColorImage::from_rgba_unmultiplied([icon.width as usize, icon.height as usize], &icon.rgba);
             ctx.load_texture("logo", image, egui::TextureOptions::LINEAR)
         });
 
@@ -224,7 +228,8 @@ impl App {
                 }
                 Msg::Finished(Ok(outcome)) => {
                     self.running = false;
-                    self.progress = Progress { index: self.progress.total, total: self.progress.total, title: "Done".into() };
+                    self.progress =
+                        Progress { index: self.progress.total, total: self.progress.total, title: "Done".into() };
                     self.outcome = Some(outcome);
                 }
                 Msg::Finished(Err(error)) => {
@@ -271,7 +276,11 @@ impl App {
             }
             ui.vertical(|ui| {
                 ui.label(RichText::new("ochu!!").size(26.0).strong().color(Color32::WHITE));
-                note(ui, "The decompiled source of the legacy osu! client, generated from your own copy of the game.", MUTED);
+                note(
+                    ui,
+                    "The decompiled source of the legacy osu! client, generated from your own copy of the game.",
+                    MUTED,
+                );
             });
         });
         ui.add_space(6.0);
@@ -294,7 +303,13 @@ impl App {
         );
         ui.add_space(4.0);
 
-        ui.add_enabled(!self.running, egui::Checkbox::new(&mut self.check, "Also rebuild the source and compare it with the original, method by method (a few more minutes)"));
+        ui.add_enabled(
+            !self.running,
+            egui::Checkbox::new(
+                &mut self.check,
+                "Also rebuild the source and compare it with the original, method by method (a few more minutes)",
+            ),
+        );
         note(
             ui,
             "Your game folder is only read and the game is never started. The source is osu!'s code, the work of ppy Pty Ltd: it is for your own study and must not be redistributed.",
@@ -310,11 +325,16 @@ impl App {
                     self.stop.stop();
                 }
                 let Progress { index, total, title } = &self.progress;
-                ui.add(egui::ProgressBar::new(self.progress.fraction()).text(format!("{}/{}  {}", index, total, title)).animate(true));
+                ui.add(
+                    egui::ProgressBar::new(self.progress.fraction())
+                        .text(format!("{}/{}  {}", index, total, title))
+                        .animate(true),
+                );
                 return;
             }
             let ready = self.game_state == GameState::Reference && !self.out.trim().is_empty();
-            let button = egui::Button::new(RichText::new("Generate the source").strong().color(Color32::WHITE)).fill(BUTTON);
+            let button =
+                egui::Button::new(RichText::new("Generate the source").strong().color(Color32::WHITE)).fill(BUTTON);
             if ui.add_enabled(ready, button).clicked() {
                 self.start(ui.ctx());
             }
@@ -328,12 +348,23 @@ impl App {
 
     fn result(&self, ui: &mut egui::Ui) {
         if let Some(outcome) = &self.outcome {
-            let verdict = if outcome.verified { "identical to the reference source" } else { "not compared with the reference source" };
+            let verdict = if outcome.verified {
+                "identical to the reference source"
+            } else {
+                "not compared with the reference source"
+            };
             note(ui, format!("Done: {} files in {}, {}.", outcome.files, outcome.src.display(), verdict), GOOD);
             // The ALL line of scripts/match.ps1: category, methods, match, diff, missing, rate.
             let fields: Vec<&str> = outcome.rate.as_deref().unwrap_or_default().split_whitespace().collect();
             if fields.len() >= 6 {
-                note(ui, format!("Rebuilt and compared: {} of {} methods give back the original IL ({}).", fields[2], fields[1], fields[5]), GOOD);
+                note(
+                    ui,
+                    format!(
+                        "Rebuilt and compared: {} of {} methods give back the original IL ({}).",
+                        fields[2], fields[1], fields[5]
+                    ),
+                    GOOD,
+                );
             }
         }
         if let Some(error) = &self.error {
@@ -345,18 +376,26 @@ impl App {
     fn log_view(&self, ui: &mut egui::Ui) {
         let row_height = ui.text_style_height(&egui::TextStyle::Monospace);
         egui::Frame::new().fill(ui.visuals().extreme_bg_color).corner_radius(6.0).inner_margin(8.0).show(ui, |ui| {
-            egui::ScrollArea::both().auto_shrink([false, false]).stick_to_bottom(true).show_rows(ui, row_height, self.log.len(), |ui, rows| {
-                for line in &self.log[rows] {
-                    let color = if line.starts_with("-- ") {
-                        ACCENT
-                    } else if line.starts_with("error") {
-                        BAD
-                    } else {
-                        MUTED
-                    };
-                    ui.add(egui::Label::new(RichText::new(line).monospace().color(color)).wrap_mode(egui::TextWrapMode::Extend));
-                }
-            });
+            egui::ScrollArea::both().auto_shrink([false, false]).stick_to_bottom(true).show_rows(
+                ui,
+                row_height,
+                self.log.len(),
+                |ui, rows| {
+                    for line in &self.log[rows] {
+                        let color = if line.starts_with("-- ") {
+                            ACCENT
+                        } else if line.starts_with("error") {
+                            BAD
+                        } else {
+                            MUTED
+                        };
+                        ui.add(
+                            egui::Label::new(RichText::new(line).monospace().color(color))
+                                .wrap_mode(egui::TextWrapMode::Extend),
+                        );
+                    }
+                },
+            );
         });
     }
 }
@@ -372,18 +411,24 @@ impl eframe::App for App {
         if self.running && ctx.input(|i| i.viewport().close_requested()) {
             self.stop.stop();
         }
-        egui::CentralPanel::default().frame(egui::Frame::central_panel(&ctx.style()).inner_margin(20.0)).show(ctx, |ui| {
-            self.header(ui);
-            self.form(ui);
-            self.actions(ui);
-            self.result(ui);
-            self.log_view(ui);
-        });
+        egui::CentralPanel::default().frame(egui::Frame::central_panel(&ctx.style()).inner_margin(20.0)).show(
+            ctx,
+            |ui| {
+                self.header(ui);
+                self.form(ui);
+                self.actions(ui);
+                self.result(ui);
+                self.log_view(ui);
+            },
+        );
     }
 }
 
 fn main() -> eframe::Result {
-    let mut viewport = egui::ViewportBuilder::default().with_title("ochu!!").with_inner_size([820.0, 700.0]).with_min_inner_size([640.0, 560.0]);
+    let mut viewport = egui::ViewportBuilder::default()
+        .with_title("ochu!!")
+        .with_inner_size([820.0, 700.0])
+        .with_min_inner_size([640.0, 560.0]);
     if let Ok(icon) = eframe::icon_data::from_png_bytes(ICON) {
         viewport = viewport.with_icon(icon);
     }

@@ -130,7 +130,8 @@ fn sdk_fits(sdks: &[String]) -> bool {
 }
 
 fn machine_sdk_fits(ctx: &Ctx) -> bool {
-    run::command(ctx, Path::new("dotnet"), &["--list-sdks"], &run::windows_dir(), Echo::Quiet).is_ok_and(|out| out.code == 0 && sdk_fits(&out.lines))
+    run::command(ctx, Path::new("dotnet"), &["--list-sdks"], &run::windows_dir(), Echo::Quiet)
+        .is_ok_and(|out| out.code == 0 && sdk_fits(&out.lines))
 }
 
 pub fn ensure_dotnet(ctx: &Ctx) -> Result<()> {

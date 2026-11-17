@@ -44,7 +44,9 @@ struct Paths {
 
 impl Paths {
     fn new(ctx: &Ctx, o: &Options) -> Paths {
-        let or = |given: &Option<PathBuf>, default: &str| given.as_ref().map_or_else(|| ctx.path(default), |p| ctx.root.join(p));
+        let or = |given: &Option<PathBuf>, default: &str| {
+            given.as_ref().map_or_else(|| ctx.path(default), |p| ctx.root.join(p))
+        };
         Paths {
             inputs: ctx.path("work\\triage\\in"),
             deobf: ctx.path("work\\deobf"),
@@ -135,7 +137,11 @@ fn rename(ctx: &Ctx, _: &Options, paths: &Paths) -> Result<()> {
     if out.code != 0 || !renamed.is_file() {
         bail!("de4dot rename failed, see {}", log.display());
     }
-    run::script(ctx, "dump-symbols.ps1", &["-Path", &text(&renamed), "-Out", &text(&paths.decomp.join("symbols.tsv"))])?;
+    run::script(
+        ctx,
+        "dump-symbols.ps1",
+        &["-Path", &text(&renamed), "-Out", &text(&paths.decomp.join("symbols.tsv"))],
+    )?;
     Ok(())
 }
 
@@ -151,7 +157,15 @@ fn decompile(ctx: &Ctx, o: &Options, paths: &Paths) -> Result<()> {
 
     let dotnet = Path::new("dotnet");
     let project = ctx.path("scripts\\decompiler\\Decompile.csproj");
-    let build: [&OsStr; 7] = ["build".as_ref(), project.as_ref(), "-c".as_ref(), "Release".as_ref(), "-nologo".as_ref(), "-v".as_ref(), "q".as_ref()];
+    let build: [&OsStr; 7] = [
+        "build".as_ref(),
+        project.as_ref(),
+        "-c".as_ref(),
+        "Release".as_ref(),
+        "-nologo".as_ref(),
+        "-v".as_ref(),
+        "q".as_ref(),
+    ];
     let built = run::command(ctx, dotnet, &build, &ctx.root, Echo::Quiet)?;
     if built.code != 0 {
         built.lines.iter().take(30).for_each(|line| ctx.log(format!("      {}", line)));
@@ -162,7 +176,8 @@ fn decompile(ctx: &Ctx, o: &Options, paths: &Paths) -> Result<()> {
     let named = paths.deobf.join("osu!.named.exe");
     let family = raw.parent().unwrap_or(&paths.decomp).join("family.tsv");
     let units = ctx.path("docs\\units.tsv");
-    let transforms = fs::read_to_string(ctx.path("scripts\\decompiler\\transforms.txt")).context("scripts/decompiler/transforms.txt")?;
+    let transforms = fs::read_to_string(ctx.path("scripts\\decompiler\\transforms.txt"))
+        .context("scripts/decompiler/transforms.txt")?;
     let transforms = transforms.lines().map(str::trim).filter(|l| !l.is_empty() && !l.starts_with('#'));
 
     let mut args: Vec<&OsStr> = vec![
