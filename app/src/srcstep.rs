@@ -45,13 +45,13 @@ fn csharp_files(dir: &Path) -> Result<Vec<PathBuf>> {
     Ok(files::walk(dir)?.into_iter().filter(|path| has_extension(path, "cs")).collect())
 }
 
-fn group<'t>(caps: &Captures<'t>, number: usize) -> &'t str {
+fn group<'t>(caps: &Captures<'t, str>, number: usize) -> &'t str {
     caps.get(number).map_or("", |m| m.as_str())
 }
 
 // A .NET substitution ($1, ${name}, $$, $&), with .NET's reading of it: `$12` is group 12 when
 // it exists, else the longest prefix that names a group; an unknown group stays as written.
-fn expand(replacement: &str, caps: &Captures, out: &mut String) {
+fn expand(replacement: &str, caps: &Captures<str>, out: &mut String) {
     let mut rest = replacement;
     while let Some(at) = rest.find('$') {
         out.push_str(&rest[..at]);

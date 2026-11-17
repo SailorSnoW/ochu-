@@ -51,8 +51,13 @@ pub const DOTNET_SDK: Pin = Pin {
 
 fn receive(ctx: &Ctx, url: &str, part: &Path) -> Result<()> {
     let response = ureq::get(url).call().with_context(|| format!("download failed: {}", url))?;
-    let total: u64 = response.header("Content-Length").and_then(|v| v.parse().ok()).unwrap_or(0);
-    let mut reader = response.into_reader();
+    let total: u64 = response
+        .headers()
+        .get("content-length")
+        .and_then(|v| v.to_str().ok())
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(0);
+    let mut reader = response.into_body().into_reader();
     let mut file = fs::File::create(part)?;
     let mut buffer = vec![0u8; 1 << 16];
     let (mut done, mut shown) = (0u64, 0u64);

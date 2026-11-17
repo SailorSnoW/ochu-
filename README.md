@@ -125,7 +125,7 @@ downloads of the program are pinned in `app/src/tools.rs`.
 |---|---|---|
 | ICSharpCode.Decompiler | 9.1.0.7988 | the decompiler engine behind `scripts/decompiler` |
 | Roslyn (`Microsoft.Net.Compilers.Toolset`) | 3.11.0 | the compiler of the matching build (`build/osu.csproj`) |
-| Rust | 1.96.0 | builds `app/`; its crates are pinned by `app/Cargo.lock` |
+| Rust | 1.100.0 | builds `app/`; its crates are pinned by `app/Cargo.lock` |
 | de4dot-cex | 4.0.0 | generic renaming of invalid names; its `dnlib` is the metadata library of the scripts |
 
 ## Working rules

@@ -116,7 +116,7 @@ fn style(ctx: &egui::Context) {
     visuals.widgets.inactive.weak_bg_fill = Color32::from_rgb(0x16, 0x33, 0x50);
     visuals.widgets.hovered.weak_bg_fill = Color32::from_rgb(0x1E, 0x4A, 0x73);
     ctx.set_visuals(visuals);
-    ctx.style_mut(|style| {
+    ctx.global_style_mut(|style| {
         style.spacing.item_spacing = egui::vec2(8.0, 8.0);
         style.spacing.button_padding = egui::vec2(12.0, 6.0);
     });
@@ -401,7 +401,8 @@ impl App {
 }
 
 impl eframe::App for App {
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+    // Runs while the window is hidden too: the log of a run keeps being received.
+    fn logic(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         self.receive();
         self.check_game(ctx);
         if self.autostart && self.game_state == GameState::Reference && !self.running {
@@ -411,16 +412,17 @@ impl eframe::App for App {
         if self.running && ctx.input(|i| i.viewport().close_requested()) {
             self.stop.stop();
         }
-        egui::CentralPanel::default().frame(egui::Frame::central_panel(&ctx.style()).inner_margin(20.0)).show(
-            ctx,
-            |ui| {
-                self.header(ui);
-                self.form(ui);
-                self.actions(ui);
-                self.result(ui);
-                self.log_view(ui);
-            },
-        );
+    }
+
+    fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
+        let frame = egui::Frame::central_panel(ui.style()).inner_margin(20.0);
+        egui::CentralPanel::default().frame(frame).show(ui, |ui| {
+            self.header(ui);
+            self.form(ui);
+            self.actions(ui);
+            self.result(ui);
+            self.log_view(ui);
+        });
     }
 }
 
